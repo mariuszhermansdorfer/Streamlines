@@ -74,8 +74,8 @@ namespace Streamlines
                 _streamlines[i] = new Polyline();
                 _streamlines[i].Add(_probes[i].Location);
 
-                // Iterate over frames. Omit first which defines initial positions
-                for (int j = 1; j < _frames.Count - 1; j++)
+                // Iterate over frames
+                for (int j = 0; j < _frames.Count - 1; j++)
                 {
                     var currentLocation = _streamlines[i].Last;
                     if (!_clippingBox.Contains(currentLocation))
