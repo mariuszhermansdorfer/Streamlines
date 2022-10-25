@@ -5,7 +5,6 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Streamlines
@@ -22,8 +21,7 @@ namespace Streamlines
 
         private int _skip;
         private int _spacing;
-        private int _thickness = 2;
-        private BoundingBox _clippingBox;
+
         private PointCloud _probes;
         private List<Vector3d[]> _frames;
         private Polyline[] _streamlines;
@@ -42,10 +40,6 @@ namespace Streamlines
             pManager.AddNumberParameter("velocities", "velocities", "", GH_ParamAccess.tree);
         }
 
-        protected override void BeforeSolveInstance()
-        {
-            _clippingBox = BoundingBox.Empty;
-        }
     
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -57,7 +51,7 @@ namespace Streamlines
                 return;
 
             _probes = Core.CreateProbePoints(_spacing);
-            _clippingBox.Union(_probes.GetBoundingBox(false));
+            var clippingBox = _probes.GetBoundingBox(false);
 
             _frames = new List<Vector3d[]>();
             for (int i = 0; i < 100; i++)
@@ -83,7 +77,7 @@ namespace Streamlines
                 for (int j = 0; j < _frames.Count - 1; j++)
                 {
                     var currentLocation = _streamlines[i].Last;
-                    if (!_clippingBox.Contains(currentLocation))
+                    if (!clippingBox.Contains(currentLocation))
                         break;
 
                     var closestProbe = _probes.ClosestPoint(currentLocation);
@@ -115,12 +109,6 @@ namespace Streamlines
             DA.SetDataTree(1, vertexColorBuffer);
 
         }
-
-        public override BoundingBox ClippingBox
-        {
-            get { return _clippingBox; }
-        }
-
 
         protected override System.Drawing.Bitmap Icon => null;
 
