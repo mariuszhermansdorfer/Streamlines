@@ -14,8 +14,8 @@ namespace Resizable
     {
         public Image Image;
         public double ImageRatio;
-        public ImagePreview() : base(new GH_InstanceDescription("Resizable",
-            "Resizable", "Resizable Component", "Category", "subcategory"))
+        public ImagePreview() : base(new GH_InstanceDescription("ImagePreview",
+            "ImagePreview", "ImagePreview", "Category", "subcategory"))
         {
             Image = Image.FromFile("C:\\Users\\MRHE\\OneDrive - Ramboll\\Desktop\\ada.jpg");
             ImageRatio = Image.Height / Image.Width;
