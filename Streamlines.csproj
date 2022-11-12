@@ -10,6 +10,7 @@
   
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
+    <PackageReference Include="Sylvan.Data.Csv" Version="1.2.4" />
   </ItemGroup>
   
   <ItemGroup>

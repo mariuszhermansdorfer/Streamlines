@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rhino;
 using Rhino.Geometry;
+using Sylvan.Data.Csv;
 
 namespace Streamlines
 {
@@ -36,5 +37,23 @@ namespace Streamlines
 
             return velocityVectors;
         }
+
+        public static PointCloud ReadProbeLocations(string filePath)
+        {
+            PointCloud probes = new PointCloud();
+            var csv = CsvDataReader.Create(filePath);
+            using (csv)
+            {
+                while (csv.Read())
+                {
+                    var x = csv.GetDouble(0);
+                    var y = csv.GetDouble(1);
+                    var z = csv.GetDouble(2);
+                    probes.Add(new Point3d(x, y, z));
+                }
+            }
+            return probes;
+        }
+
     }
 }
