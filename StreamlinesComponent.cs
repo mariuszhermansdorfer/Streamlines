@@ -62,7 +62,30 @@ namespace Streamlines
             DA.GetData(3, ref _reset);
 
             if (_reset)
+            {
                 _tree = null;
+                GH_Document grasshopperDocument = OnPingDocument();
+                List<IGH_DocumentObject> componentList = new List<IGH_DocumentObject>();
+
+                var thumbnail = new ImagePreview();
+
+                string path = "C:\\Users\\MRHE\\OneDrive - Ramboll\\Desktop\\DEV\\Template\\210506_GS_Showcase_embedded_files\\Lawn.png";
+                thumbnail.AddVolatileData(new GH_Path(0), 0, new GH_String(path));
+
+                thumbnail.CreateAttributes();
+                thumbnail.Attributes.Pivot = new System.Drawing.PointF(Attributes.Pivot.X + 200, Attributes.Pivot.Y);
+                thumbnail.Attributes.ExpireLayout();
+                thumbnail.Attributes.PerformLayout();
+                
+                componentList.Add(thumbnail);
+
+                foreach (var component in componentList)
+                    grasshopperDocument.AddObject(component, false);
+
+                grasshopperDocument.UndoUtil.RecordAddObjectEvent("Add image previews", componentList);
+
+            }
+                
 
             _probes = Core.CreateProbePoints(_spacing);
             if (_tree == null)

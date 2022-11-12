@@ -8,7 +8,7 @@ using Grasshopper.Kernel.Attributes;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-namespace Resizable
+namespace Streamlines
 {
     public class ImagePreview : GH_PersistentParam<GH_String>
     {
@@ -60,7 +60,7 @@ namespace Resizable
             base.RecordPersistentDataEvent("Clear image file");
             base.PersistentData.Clear();
             base.OnObjectChanged(GH_ObjectEventType.PersistentData);
-            this.Sources.Clear();
+            RemoveAllSources();
             ExpireSolution(true);
         }
         protected override GH_GetterResult Prompt_Singular(ref GH_String value)
@@ -94,7 +94,10 @@ namespace Resizable
         protected override Padding SizingBorders => new Padding(2);
         protected override void Layout()
         {
-            Bounds = new RectangleF(Pivot.X, Pivot.Y, (float)Bounds.Width, (float)(Bounds.Width * Owner.ImageRatio));
+            if (Owner.Image == null)
+                Bounds = new RectangleF(Pivot.X, Pivot.Y, 150, 150);
+            else
+                Bounds = new RectangleF(Pivot.X, Pivot.Y, (float)Bounds.Width, (float)(Bounds.Width * Owner.ImageRatio));
         }
         protected override void Render(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
         {
@@ -111,7 +114,7 @@ namespace Resizable
                 capsule.Render(graphics, Selected, Owner.Locked, true);
                 capsule.Dispose();
 
-                if (Owner.Image == null)
+                if (Owner.Locked || Owner.Image == null)
                     return;
 
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Low;
